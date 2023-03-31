@@ -4,7 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Variant;
+use App\Models\ProductVariant;
+use App\Models\ProductVariantPrice;
 use Illuminate\Http\Request;
+use App\Models\ProductImage;
+use Exception;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -15,7 +20,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view('products.index');
+        $products = Product::with(['prices'])->paginate(10);
+        $product_variants = ProductVariant::all();
+        return view('products.index', compact('products', 'product_variants'));
     }
 
     /**
