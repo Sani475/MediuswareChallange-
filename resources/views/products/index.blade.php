@@ -8,14 +8,19 @@
 
 
     <div class="card">
-        <form action="" method="get" class="card-header">
+    <form action="{{route('search')}}" method="post" class="card-header">
+            @csrf
             <div class="form-row justify-content-between">
                 <div class="col-md-2">
-                    <input type="text" name="title" placeholder="Product Title" class="form-control">
+                    <input type="text" name="title" id="title" placeholder="Product Title" class="form-control" value="">
                 </div>
                 <div class="col-md-2">
-                    <select name="variant" id="" class="form-control">
-
+                    <select name="variant" id="select" class="form-control">
+                        <option value="" selected>Select variant</option>
+                    @forelse($product_variants as $item)
+                        <option value="{{$item->id}}">{{$item->variant}}</option>
+                    @empty
+                    @endforelse
                     </select>
                 </div>
 
@@ -59,8 +64,7 @@
                         <td>{{$row->description}}</td>
                         <td>
                             <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
-
-                                
+                            
                                 <dd class="col-sm-9">
                                 @forelse($row->prices as $price)
                                     <dl class="row mb-0">
@@ -82,18 +86,29 @@
                     @empty
                     <tr><td>No Data available</td></tr>
                     @endforelse
+                    </tbody>
                 </table>
             </div>
 
         </div>
-
         <div class="card-footer">
-            <div class="row justify-content-between">
-                <div class="col-md-6">
-                    <p>Showing 1 to 10 out of 100</p>
+            <div class="d-flex justify-content-between">
+                <div>
+                    @php
+                        $showing = $products->perPage() * ($products->currentPage()-1) + 1;
+                        $to = $products->perPage() * $products->currentPage();
+                        $total = $products->total();
+                    @endphp
+                    <p>
+                        Showing {{$showing > $total ? $total : $showing}}
+                        to 
+                        {{$to > $total ? $total : $to}}
+                        out of 
+                        {{$total}}
+                    </p>
                 </div>
-                <div class="col-md-2">
-
+                <div>
+                    {{ $products->links()}}
                 </div>
             </div>
         </div>

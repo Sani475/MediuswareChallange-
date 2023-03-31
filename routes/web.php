@@ -22,10 +22,12 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/dropzone', 'HomeController@index')->name('file-upload');
+Route::get('product/search', 'ProductController@search')->name('search');
 
 Route::middleware('auth')->group(function () {
     Route::resource('product-variant', 'VariantController');
     Route::resource('product', 'ProductController');
     Route::resource('blog', 'BlogController');
     Route::resource('blog-category', 'BlogCategoryController');
+    Route::post('product/search', 'ProductController@search')->name('search');
 });
